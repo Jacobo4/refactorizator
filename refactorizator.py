@@ -1,32 +1,33 @@
 # open and read xlsx file with openpyxl module
 def main():
-    sqlFile = open('202201.sql', 'r')
+    sqlFile = open('input/2022-1S.sql', 'r')
     newSqlFile = open("out.sql", "wt")
     for line in sqlFile:
-        splitline = line.split()
+        splitline = line.split("VALUES")
+        values = splitline[1].split(",")
 
-        # Add the all without the last part corresponding to the values part
-        aux = splitline.pop()
-        for word in splitline:
-            newSqlFile.write(word)
-            newSqlFile.write(' ')
         #Add the values part with the new values
-        newLine = ""
-        values = aux.split(',')
-        auxItem = ''
+        newLine = splitline[0] + "VALUES"
+        print(values)
         for i in range(values.__len__()):
-            if i == 2:
-                auxItem = values[i].split('-')[0].replace('\'', '')
-                newLine += '\'' + values[i].replace('-', '').replace('\'', '') + '\','
-            elif i == 3:
-                newLine += 'default,'
-            elif i == 7:
-                newLine += f'TIMESTAMPDIFF(YEAR, {values[i]}, \'{auxItem}-01-01\'),'
-            elif i == values.__len__() - 1:
-                newLine += values[i]
+
+            if i == 1:
+                if values[i] == "'T'":
+                    newLine += "\'TI\',"
+                if values[i] == "'C'":
+                    newLine += "\'CC\',"
+                if values[i] == "'E'":
+                    newLine += "\'CE\',"
+                if values[i] == "'P'":
+                    newLine += "\'PS\',"
+                # else:
+                #     newLine += values[i] + ','
+
             else:
                 newLine += values[i] + ','
-        newLine += '\n'
+        newLine = newLine[:-1]
+
+
         # print(newLine)
         newSqlFile.write(newLine)
 
